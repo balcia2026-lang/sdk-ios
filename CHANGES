@@ -1,3 +1,6 @@
+4.43.1
+- Added new APIs `performLoginFromViewController` and `isLoggedIn` for more control over authentication flow.
+
 4.32.1
 - Fixed an authorization issue affecting some merchants when `enforcedUserAccount` is used.
 - Optional `totalFees` field added to `iZettleSDKPaymentInfo`.
