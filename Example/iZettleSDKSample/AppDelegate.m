@@ -27,8 +27,10 @@ static NSString * const callbackURL = @"https://localhost:8001/auth/redirect";
     ///
     /// To enable developer mode pass `true` to the `enableDeveloperMode` parameter of this function
     ///
-    [[iZettleSDK shared] startWithAuthorizationProvider:authorizationProvider
-                                    enableDeveloperMode:true];
+    /// [[iZettleSDK shared] startWithAuthorizationProvider:authorizationProvider
+    ///                                 enableDeveloperMode:true];
+    ///
+    [[iZettleSDK shared] startWithAuthorizationProvider:authorizationProvider];
 
     [[iZettleSDK shared] setEnabledAlternativePaymentMethods:@[@(IZSDKAlternativePaymentMethodPayPalQRC), @(IZSDKAlternativePaymentMethodManualCardEntry)]];
 
