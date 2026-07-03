@@ -1,0 +1,16 @@
+1. Payments Tab:
+   - Set amount: €75.50
+   - Toggle tipping ON
+   - Click 10% button
+   - Click "Process Payment"
+   - See green checkmark ✓
+
+2. Settings Tab:
+   - Toggle tipping OFF
+   - See all status items GREEN
+
+3. Logs Tab:
+   - See 1 transaction
+   - Amount: €75.50
+   - Status: SUCCESS
+   - Type: CARD_PAYMENT

@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESTPOS SDKAPP - Live Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 667px;
+            background: linear-gradient(135deg, #1a2850 0%, #0a0f22 100%);
+            border-radius: 40px;
+            border: 12px solid #000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .status-bar {
+            height: 44px;
+            background: #0d1f42;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            background: #0d1f42;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-title .icon {
+            font-size: 20px;
+            color: #ff9500;
+        }
+
+        .dev-mode {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #34c759;
+        }
+
+        .dev-mode::before {
+            content: '●';
+            font-size: 8px;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: #0d1f42;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: #888;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .tab-button.active {
+            color: #ff9500;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #ff9500;
+        }
+
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #888;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .amount-input {
+            display: flex;
+            align-items: center;
+            background: #263b56;
+            border-radius: 8px;
+            padding: 12px;
+            gap: 8px;
+        }
+
+        .amount-input .currency {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .amount-input input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .amount-input input::placeholder {
+            color: #666;
+        }
+
+        .payment-methods {
+            margin-bottom: 20px;
+        }
+
+        .method-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #263b56;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            color: #fff;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .method-btn:hover {
+            background: #324860;
+            transform: translateX(4px);
+        }
+
+        .method-icon {
+            font-size: 20px;
+            color: #ff9500;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .method-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .method-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .method-desc {
+            font-size: 12px;
+            color: #888;
+            display: block;
+        }
+
+        .method-arrow {
+            color: #888;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #263b56;
+            border-radius: 8px;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 28px;
+            background: #444;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle.on {
+            background: #34c759;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 12px;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s;
+        }
+
+        .toggle.on::after {
+            left: 18px;
+        }
+
+        .tip-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tip-btn {
+            flex: 1;
+            padding: 8px;
+            background: rgba(255, 149, 0, 0.7);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tip-btn:hover {
+            background: rgba(255, 149, 0, 0.9);
+            transform: scale(1.05);
+        }
+
+        .process-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 16px;
+            background: #ff9500;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .process-btn:hover {
+            background: #e68600;
+            transform: scale(1.02);
+        }
+
+        .process-btn:active {
+            transform: scale(0.98);
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #263b56;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .settings-label {
+            flex: 1;
+        }
+
+        .settings-label-main {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .settings-label-sub {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .settings-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #34c759;
+        }
+
+        .log-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .log-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        .log-empty-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .log-item {
+            background: #263b56;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .log-left {
+            flex: 1;
+        }
+
+        .log-type {
+            font-size: 12px;
+            font-weight: 600;
+            color: #ff9500;
+            margin-bottom: 4px;
+        }
+
+        .log-status {
+            font-size: 11px;
+            color: #34c759;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .log-right {
+            text-align: right;
+        }
+
+        .log-amount {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .log-time {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+            z-index: 1000;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-checkmark {
+            font-size: 60px;
+            color: #34c759;
+        }
+
+        .success-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .success-amount {
+            font-size: 16px;
+            color: #888;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶📡🔋</span>
+        </div>
+
+        <div class="header">
+            <div class="header-title">
+                <h1>TESTPOS SDKAPP</h1>
+                <span class="icon">🔷</span>
+            </div>
+            <div class="dev-mode">Developer Mode: ENABLED</div>
+        </div>
+
+        <div class="tab-nav">
+            <button class="tab-button active" data-tab="payments">Payments</button>
+            <button class="tab-button" data-tab="settings">Settings</button>
+            <button class="tab-button" data-tab="logs">Logs</button>
+        </div>
+
+        <!-- Payments Tab -->
+        <div class="tab-content active" id="payments">
+            <div class="input-group">
+                <label class="input-label">Transaction Amount</label>
+                <div class="amount-input">
+                    <span class="currency">€</span>
+                    <input type="number" id="amount" value="99.99" placeholder="0.00" step="0.01">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Payment Methods</label>
+                <div class="payment-methods">
+                    <button class="method-btn" onclick="processPayment()">
+                        <span class="method-icon">💳</span>
+                        <div class="method-info">
+                            <span class="method-title">Card Payment</span>
+                            <span class="method-desc">Tap to start</span>
+                        </div>
+                        <span class="method-arrow">›</span>
+                    </button>
+                    <button class="method-btn" onclick="processPayment()">
+                        <span class="method-icon">📱</span>
+                        <div class="method-info">
+                            <span class="method-title">QR Code Payment</span>
+                            <span class="method-desc">PayPal / Venmo</span>
+                        </div>
+                        <span class="method-arrow">›</span>
+                    </button>
+                    <button class="method-btn" onclick="processPayment()">
+                        <span class="method-icon">⌨️</span>
+                        <div class="method-info">
+                            <span class="method-title">Manual Entry</span>
+                            <span class="method-desc">Card details</span>
+                        </div>
+                        <span class="method-arrow">›</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="toggle-group">
+                    <span class="toggle-label">Enable Tipping</span>
+                    <div class="toggle on" id="tippingToggle" onclick="toggleTipping()"></div>
+                </div>
+                <div class="tip-buttons" id="tipButtons" style="display: flex;">
+                    <button class="tip-btn">5%</button>
+                    <button class="tip-btn">10%</button>
+                    <button class="tip-btn">15%</button>
+                </div>
+            </div>
+
+            <button class="process-btn" onclick="processPayment()">
+                <span>▶</span> Process Payment
+            </button>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+            <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">POS Configuration</h2>
+            
+            <div class="settings-item">
+                <div class="settings-label">
+                    <div class="settings-label-main">Developer Mode</div>
+                    <div class="settings-label-sub">ENABLED</div>
+                </div>
+                <div class="settings-value">
+                    <div class="status-dot"></div>
+                </div>
+            </div>
+
+            <div class="settings-item">
+                <div class="settings-label">
+                    <div class="settings-label-main">Tipping</div>
+                    <div class="settings-label-sub" id="tippingStatus">ON</div>
+                </div>
+                <div class="settings-value">
+                    <div class="status-dot"></div>
+                </div>
+            </div>
+
+            <div class="settings-item">
+                <div class="settings-label">
+                    <div class="settings-label-main">Alternative Payments</div>
+                    <div class="settings-label-sub">PayPal / QRC</div>
+                </div>
+                <div class="settings-value">
+                    <div class="status-dot"></div>
+                </div>
+            </div>
+
+            <div class="settings-item">
+                <div class="settings-label">
+                    <div class="settings-label-main">Card Reader</div>
+                    <div class="settings-label-sub">iZettle</div>
+                </div>
+                <div class="settings-value">
+                    <div class="status-dot"></div>
+                </div>
+            </div>
+
+            <div class="settings-item">
+                <div class="settings-label">
+                    <div class="settings-label-main">Currency</div>
+                    <div class="settings-label-sub">EUR</div>
+                </div>
+                <div class="settings-value">
+                    <div class="status-dot"></div>
+                </div>
+            </div>
+
+            <div class="toggle-group" style="margin-top: 20px;">
+                <span class="toggle-label">Enable Tipping</span>
+                <div class="toggle on" onclick="toggleTipping()"></div>
+            </div>
+        </div>
+
+        <!-- Logs Tab -->
+        <div class="tab-content" id="logs">
+            <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">
+                Transaction Log <span style="color: #ff9500; font-size: 14px;">(<span id="logCount">0</span>)</span>
+            </h2>
+            
+            <div class="log-container" id="logContainer">
+                <div class="log-empty">
+                    <div class="log-empty-icon">📄</div>
+                    <div>No transactions yet</div>
+                    <div style="font-size: 12px; margin-top: 4px;">Process a payment to see logs</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-checkmark">✓</div>
+        <div class="success-text">Payment Successful</div>
+        <div class="success-amount" id="successAmount">€99.99</div>
+    </div>
+
+    <script>
+        let transactions = [];
+        let tippingEnabled = true;
+
+        // Tab navigation
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                e.target.classList.add('active');
+                document.getElementById(e.target.dataset.tab).classList.add('active');
+            });
+        });
+
+        function toggleTipping() {
+            tippingEnabled = !tippingEnabled;
+            document.getElementById('tippingToggle').classList.toggle('on');
+            document.getElementById('tipButtons').style.display = tippingEnabled ? 'flex' : 'none';
+            document.getElementById('tippingStatus').textContent = tippingEnabled ? 'ON' : 'OFF';
+            document.querySelectorAll('.toggle').forEach(t => t.classList.toggle('on'));
+        }
+
+        function processPayment() {
+            const amount = document.getElementById('amount').value || '99.99';
+            
+            // Add to transactions
+            const transaction = {
+                id: Date.now(),
+                amount: parseFloat(amount),
+                timestamp: new Date(),
+                status: 'SUCCESS',
+                type: 'CARD_PAYMENT'
+            };
+            
+            transactions.unshift(transaction);
+            updateLogs();
+            
+            // Show success overlay
+            document.getElementById('successAmount').textContent = `€${parseFloat(amount).toFixed(2)}`;
+            document.getElementById('successOverlay').classList.add('active');
+            
+            // Hide after 2 seconds
+            setTimeout(() => {
+                document.getElementById('successOverlay').classList.remove('active');
+            }, 2000);
+        }
+
+        function updateLogs() {
+            const logContainer = document.getElementById('logContainer');
+            const logCount = document.getElementById('logCount');
+            
+            logCount.textContent = transactions.length;
+            
+            if (transactions.length === 0) {
+                logContainer.innerHTML = `
+                    <div class="log-empty">
+                        <div class="log-empty-icon">📄</div>
+                        <div>No transactions yet</div>
+                        <div style="font-size: 12px; margin-top: 4px;">Process a payment to see logs</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            logContainer.innerHTML = transactions.map(t => `
+                <div class="log-item">
+                    <div class="log-left">
+                        <div class="log-type">${t.type}</div>
+                        <div class="log-status">✓ ${t.status}</div>
+                    </div>
+                    <div class="log-right">
+                        <div class="log-amount">€${t.amount.toFixed(2)}</div>
+                        <div class="log-time">${t.timestamp.toLocaleTimeString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

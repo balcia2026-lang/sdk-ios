@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "BEPQK2EBCGMHL.com.testpos.sdk.app.v1.0",
+        "paths": [ "/auth/redirect", "/.well-known/*" ]
+      }
+    ]
+  }
+}

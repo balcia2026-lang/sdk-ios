@@ -39,8 +39,8 @@ In the example app Xcode project, fill in  `iZettleSDKSample/AppDelegate.m` with
 ```
 ...
  id<iZettleSDKAuthorizationProvider> authorizationProvider = [[iZettleSDKAuthorization alloc]
-                                                              initWithClientID:"<client id from developer portal>"
-                                                                   callbackURL:[NSURL URLWithString:@"awesome://login.callback"]
+                          initWithClientID:@"770ad88e-1882-4ceb-89ef-d7675f5c0686"
+                                                                   callbackURL:[NSURL URLWithString:@"https://localhost:8001/auth/redirect"]
                                                                          error:&error
                                                            enforcedUserAccount:^NSString * _Nullable{
      return [AccountManager shared].enforcedUserAccount;

@@ -16,8 +16,8 @@
 /// for an example of how to do that - see `CustomAuthorizationProvider.h`,
 /// and to try it out set `useCustomAuthorizationProvider` to `YES`
 static BOOL const useCustomAuthorizationProvider = NO;
-static NSString * const clientId = @"<client id from developer portal>";
-static NSString * const callbackURL = @"izettle-iZorn://login.callback";
+static NSString * const clientId = @"770ad88e-1882-4ceb-89ef-d7675f5c0686";
+static NSString * const callbackURL = @"https://localhost:8001/auth/redirect";
 
 @implementation AppDelegate
 
@@ -27,10 +27,8 @@ static NSString * const callbackURL = @"izettle-iZorn://login.callback";
     ///
     /// To enable developer mode pass `true` to the `enableDeveloperMode` parameter of this function
     ///
-    /// [[iZettleSDK shared] startWithAuthorizationProvider:authorizationProvider
-    ///                                 enableDeveloperMode:true];
-    ///
-    [[iZettleSDK shared] startWithAuthorizationProvider:authorizationProvider];
+    [[iZettleSDK shared] startWithAuthorizationProvider:authorizationProvider
+                                    enableDeveloperMode:true];
 
     [[iZettleSDK shared] setEnabledAlternativePaymentMethods:@[@(IZSDKAlternativePaymentMethodPayPalQRC), @(IZSDKAlternativePaymentMethodManualCardEntry)]];
 
@@ -65,6 +63,20 @@ static NSString * const callbackURL = @"izettle-iZorn://login.callback";
         [CustomAuthorizationProvider notifySFSafariDidFinishWithCallbackURL:url];
     }
     
+    return YES;
+}
+
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
+    NSURL *webpageURL = userActivity.webpageURL;
+    if (!webpageURL) {
+        return NO;
+    }
+
+    if (useCustomAuthorizationProvider) {
+        [CustomAuthorizationProvider notifySFSafariDidFinishWithCallbackURL:webpageURL];
+    }
+
     return YES;
 }
 
